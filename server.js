@@ -83,7 +83,6 @@ app.put('/authors/:id', (req, res) =>
 
         }));
 
-
 rethinkdb.connect({ host: 'localhost', port: 28015 }, (error, conn) => {
 
     if (error) throw error;
