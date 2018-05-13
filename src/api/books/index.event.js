@@ -1,20 +1,20 @@
-import rethinkdb from 'rethinkdb';
+import AUTHORS_TABLE_NAME from './index.const';
 
 const onChanges = () => {
 
-    rethinkdb.table('authors').changes().run(global.connection, (err, cursor) => {
+    global.rethinkdb
+        .table(AUTHORS_TABLE_NAME)
+        .changes()
+        .run((err, change) => {
 
-        if (err) throw err;
+            change.each((changeErr, { new_val }) => {
 
-        cursor.each((cursorError, row) => {
+                console.log('===== CHANGE DETECTED ON AUTHORS =====');
+                console.log(JSON.stringify(new_val));
 
-            if (cursorError) throw cursorError;
-            console.log('===== CHANGE DETECTED ON AUTHORS =====');
-            console.log(JSON.stringify(row, null, 2));
+            });
 
         });
-
-    });
 
 };
 

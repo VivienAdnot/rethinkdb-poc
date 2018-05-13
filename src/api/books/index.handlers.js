@@ -1,78 +1,85 @@
-import rethinkdb from 'rethinkdb';
+import AUTHORS_TABLE_NAME from './index.const';
 
-exports.getAuthors = (req, res) =>
+exports.getAuthors = (req, res, next) =>
 
-    rethinkdb.db('test').table('authors').run(global.connection, (error, cursor) => {
+    global.rethinkdb
+        .table(AUTHORS_TABLE_NAME)
+        .run()
+        .then((result) => {
 
-        if (error) throw error;
+            res.data = result;
+            next();
 
-        cursor.toArray((err, result) => {
+        })
+        .catch(next);
 
-            if (err) throw err;
-            res.send(result);
+exports.getAuthorsByName = (req, res, next) =>
 
-        });
+    global.rethinkdb
+        .table(AUTHORS_TABLE_NAME)
+        .filter(global.rethinkdb.row('name').eq(req.params.name))
+        .run()
+        .then((result) => {
 
-    });
+            res.data = result;
+            next();
 
-exports.getAuthorsByName = (req, res) =>
+        })
+        .catch(next);
 
-    rethinkdb.table('authors').filter(rethinkdb.row('name').eq(req.params.name))
-        .run(global.connection, (error, cursor) => {
+exports.getActiveAuthors = (req, res, next) =>
 
-            if (error) throw error;
+    global.rethinkdb
+        .table(AUTHORS_TABLE_NAME)
+        .filter(global.rethinkdb.row('posts').count().gt(2))
+        .run()
+        .then((result) => {
 
-            cursor.toArray((err, result) => {
+            res.data = result;
+            next();
 
-                if (err) throw err;
-                res.send(result);
+        })
+        .catch(next);
 
-            });
+exports.getAuthorsById = (req, res, next) =>
 
-        });
+    global.rethinkdb
+        .table(AUTHORS_TABLE_NAME)
+        .get(req.params.id)
+        .run()
+        .then((result) => {
 
-exports.getActiveAuthors = (req, res) =>
+            res.data = result;
+            next();
 
-    rethinkdb.table('authors').filter(rethinkdb.row('posts').count().gt(2))
-        .run(global.connection, (error, cursor) => {
+        })
+        .catch(next);
 
-            if (error) throw error;
+exports.postAuthors = (req, res, next) =>
 
-            cursor.toArray((err, result) => {
+    global.rethinkdb
+        .table(AUTHORS_TABLE_NAME)
+        .insert(req.body)
+        .run()
+        .then((result) => {
 
-                if (err) throw err;
-                res.send(result);
+            res.data = result;
+            next();
 
-            });
+        })
+        .catch(next);
 
-        });
+exports.putAuthor = (req, res, next) =>
 
-exports.getAuthorsById = (req, res) =>
-
-    rethinkdb.table('authors').get(req.params.id).run(global.connection, (err, result) => {
-
-        if (err) throw err;
-        res.send(result);
-
-    });
-
-exports.postAuthors = (req, res) =>
-
-    rethinkdb.table('authors').insert(req.body).run(global.connection, (err, result) => {
-
-        if (err) throw err;
-        res.send(result);
-
-    });
-
-exports.putAuthor = (req, res) =>
-
-    rethinkdb.table('authors')
+    global.rethinkdb
+        .table(AUTHORS_TABLE_NAME)
         .get(req.params.id)
         .update(req.body)
-        .run(global.connection, (err, result) => {
+        .run()
+        .then((result) => {
 
-            if (err) throw err;
-            res.send(result);
+            res.data = result;
+            next();
 
-        });
+        })
+        .catch(next);

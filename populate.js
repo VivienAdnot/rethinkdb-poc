@@ -9,7 +9,7 @@
 // });
 
 // app.post('/insert_data', function(req, res) {
-//     rethinkdb.table('authors').insert([
+//     rethinkdb.table(AUTHORS_TABLE_NAME).insert([
 //         { name: "William Adama", tv_show: "Battlestar Galactica",
 //           posts: [
 //             {title: "Decommissioning speech", content: "The Cylon War is long over..."},
