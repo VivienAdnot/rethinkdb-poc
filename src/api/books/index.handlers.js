@@ -1,8 +1,9 @@
-import AUTHORS_TABLE_NAME from './index.const';
+import { AUTHORS_DATABASE_NAME, AUTHORS_TABLE_NAME } from './index.const';
 
 exports.getAuthors = (req, res, next) =>
 
     global.rethinkdb
+        .db(AUTHORS_DATABASE_NAME)
         .table(AUTHORS_TABLE_NAME)
         .run()
         .then((result) => {
@@ -16,6 +17,7 @@ exports.getAuthors = (req, res, next) =>
 exports.getAuthorsByName = (req, res, next) =>
 
     global.rethinkdb
+        .db(AUTHORS_DATABASE_NAME)
         .table(AUTHORS_TABLE_NAME)
         .filter(global.rethinkdb.row('name').eq(req.params.name))
         .run()
@@ -30,6 +32,7 @@ exports.getAuthorsByName = (req, res, next) =>
 exports.getActiveAuthors = (req, res, next) =>
 
     global.rethinkdb
+        .db(AUTHORS_DATABASE_NAME)
         .table(AUTHORS_TABLE_NAME)
         .filter(global.rethinkdb.row('posts').count().gt(2))
         .run()
@@ -44,6 +47,7 @@ exports.getActiveAuthors = (req, res, next) =>
 exports.getAuthorsById = (req, res, next) =>
 
     global.rethinkdb
+        .db(AUTHORS_DATABASE_NAME)
         .table(AUTHORS_TABLE_NAME)
         .get(req.params.id)
         .run()
@@ -58,6 +62,7 @@ exports.getAuthorsById = (req, res, next) =>
 exports.postAuthors = (req, res, next) =>
 
     global.rethinkdb
+        .db(AUTHORS_DATABASE_NAME)
         .table(AUTHORS_TABLE_NAME)
         .insert(req.body)
         .run()
@@ -72,6 +77,7 @@ exports.postAuthors = (req, res, next) =>
 exports.putAuthor = (req, res, next) =>
 
     global.rethinkdb
+        .db(AUTHORS_DATABASE_NAME)
         .table(AUTHORS_TABLE_NAME)
         .get(req.params.id)
         .update(req.body)
